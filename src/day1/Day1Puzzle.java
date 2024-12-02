@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 
 public class Day1Puzzle {
@@ -27,6 +28,11 @@ public class Day1Puzzle {
             e.printStackTrace();
         }
 
+        calculateTotalDistance(a, b);
+        calculateSimilarity(a, b);
+    }
+
+    private static void calculateTotalDistance(List<Integer> a, List<Integer> b) {
         a.sort(Integer::compareTo);
         b.sort(Integer::compareTo);
 
@@ -36,7 +42,28 @@ public class Day1Puzzle {
         }
 
         int sum = distances.stream().mapToInt(Integer::intValue).sum();
-        System.out.println("Result of Day 1 Puzzle: ");
+        System.out.println("Total Distance: ");
         System.out.println(sum);
+    }
+
+    private static void calculateSimilarity(List<Integer> a, List<Integer> b) {
+        List<Integer> appearances = a.stream().map(aElement -> {
+            int counter = 0;
+            for (int bElement : b) {
+                if (aElement == bElement) {
+                    counter++;
+                }
+            }
+
+            return counter;
+        }).collect(Collectors.toCollection(ArrayList::new));
+
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < a.size(); i++) {
+            result.add(a.get(i) * appearances.get(i));
+        }
+
+        System.out.println("Similarity Score: ");
+        System.out.println(result.stream().mapToInt(Integer::intValue).sum());
     }
 }
