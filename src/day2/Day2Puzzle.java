@@ -10,7 +10,6 @@ import java.util.StringTokenizer;
 
 public class Day2Puzzle {
     private List<List<Integer>> reports;
-    private boolean hadError = false;
 
     public Day2Puzzle() {
         this.reports = readReportsFromInputFile();
@@ -45,8 +44,20 @@ public class Day2Puzzle {
 
     private void countSafeReportsWithDampener(List<List<Integer>> reports) {
         int safeCounter = 0;
-        for (List<Integer> report : reports) {
 
+        for (List<Integer> report : reports) {
+            if (!((isSortedAsc(report) || isSortedDesc(report)) && hasMinimalChange(report))) {
+                for (int i = 0; i < report.size(); i++) {
+                    List<Integer> reportWithoutElement = new ArrayList<>(report);
+                    reportWithoutElement.remove(i);
+                    if ((isSortedAsc(reportWithoutElement) || isSortedDesc(reportWithoutElement)) && hasMinimalChange(reportWithoutElement)) {
+                        safeCounter++;
+                        break;
+                    }
+                }
+            } else {
+                safeCounter++;
+            }
         }
 
         System.out.println("Safe reports with Dampener: ");
