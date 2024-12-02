@@ -9,7 +9,19 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class Day2Puzzle {
-    public static void solve() {
+    private List<List<Integer>> reports;
+    private boolean hadError = false;
+
+    public Day2Puzzle() {
+        this.reports = readReportsFromInputFile();
+    }
+
+    public void solve() {
+        countSafeReports(reports);
+        countSafeReportsWithDampener(reports);
+    }
+
+    private static List<List<Integer>> readReportsFromInputFile() {
         InputStream inputStream = Day2Puzzle.class.getResourceAsStream("input");
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         List<List<Integer>> reports = new ArrayList<>();
@@ -28,20 +40,24 @@ public class Day2Puzzle {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return reports;
+    }
 
+    private void countSafeReportsWithDampener(List<List<Integer>> reports) {
+        int safeCounter = 0;
+        for (List<Integer> report : reports) {
+
+        }
+
+        System.out.println("Safe reports with Dampener: ");
+        System.out.println(safeCounter);
+    }
+
+    private void countSafeReports(List<List<Integer>> reports) {
         int safeCounter = 0;
         for (List<Integer> report : reports) {
             if (isSortedAsc(report) || isSortedDesc(report)) {
-                boolean isSafe = true;
-                for (int i = 1; i < report.size(); i++) {
-                    int difference = Math.abs(report.get(i-1) - report.get(i));
-                    if (difference < 1 || difference > 3) {
-                        isSafe = false;
-                        break;
-                    }
-                }
-
-                if (isSafe) {
+                if (hasMinimalChange(report)) {
                     safeCounter++;
                 }
             }
@@ -51,7 +67,18 @@ public class Day2Puzzle {
         System.out.println(safeCounter);
     }
 
-    private static boolean isSortedAsc(List<Integer> list) {
+    private boolean hasMinimalChange(List<Integer> report) {
+        for (int i = 1; i < report.size(); i++) {
+            int difference = Math.abs(report.get(i - 1) - report.get(i));
+            if (difference < 1 || difference > 3) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean isSortedAsc(List<Integer> list) {
         for (int i = 0; i < list.size() - 1; i++) {
             if (list.get(i) > list.get(i + 1)) {
                 return false;
@@ -61,7 +88,7 @@ public class Day2Puzzle {
         return true;
     }
 
-    private static boolean isSortedDesc(List<Integer> list) {
+    private boolean isSortedDesc(List<Integer> list) {
         for (int i = 0; i < list.size() - 1; i++) {
             if (list.get(i) < list.get(i + 1)) {
                 return false;
